@@ -33,7 +33,8 @@ jobs:
               with:
                 context: ./${{ matrix.folders }}
                 file: ./${{ matrix.folders }}/Dockerfile
-                tags: ${{ vars.DOCKERHUB_USERNAME }}/devboard-${{ matrix.folders }}:latest
+                # Match the exact image naming scheme defined in your docker-compose.yml file
+                tags: trainwithshubham/devboard-${{ matrix.folders }}:latest
                 push: false
                 load: true
 
@@ -41,7 +42,7 @@ jobs:
               uses: aquasecurity/trivy-action@v0.29.0
               continue-on-error: true
               with:
-                image-ref: ${{ vars.DOCKERHUB_USERNAME }}/devboard-${{ matrix.folders }}:latest
+                image-ref: trainwithshubham/devboard-${{ matrix.folders }}:latest
                 format: 'table'
                 exit-code: '1'
                 ignore-unfixed: true
@@ -57,7 +58,7 @@ jobs:
               uses: aquasecurity/trivy-action@v0.29.0
               continue-on-error: true
               with:
-                image-ref: ${{ vars.DOCKERHUB_USERNAME }}/devboard-${{ matrix.folders }}:latest
+                image-ref: trainwithshubham/devboard-${{ matrix.folders }}:latest
                 format: 'sarif'
                 output: 'reports/trivy-${{ matrix.folders }}-report.sarif'
                 ignore-unfixed: true
