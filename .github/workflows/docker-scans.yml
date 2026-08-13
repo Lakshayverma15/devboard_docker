@@ -35,7 +35,7 @@ jobs:
                 file: ./${{ matrix.folders }}/Dockerfile
                 tags: ${{ vars.DOCKERHUB_USERNAME }}/devboard-${{ matrix.folders }}:latest
                 push: false
-                load: true # Safely exports the image to the local runner for Trivy to find
+                load: true # Safely loads image into local runner memory for Trivy
 
             - name: Run Trivy vulnerability scanner
               uses: aquasecurity/trivy-action@v0.35.0
