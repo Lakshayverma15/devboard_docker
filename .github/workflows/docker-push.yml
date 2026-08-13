@@ -29,4 +29,5 @@ jobs:
                 context: ./${{ matrix.folders }}
                 file: ./${{ matrix.folders }}/Dockerfile
                 push: true
+                # Hardcoded namespace perfectly matching the scanner target
                 tags: lakshayverma1515/devboard-${{ matrix.folders }}:latest
