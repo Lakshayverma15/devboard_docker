@@ -27,7 +27,9 @@ jobs:
         secrets: inherit 
 
     # SonarQube
-    
+    sonar-qube:
+        uses: ./.github/workflows/sonar-scan.yml
+        secrets: inherit
 
     # Code Tests
     code-tests:
