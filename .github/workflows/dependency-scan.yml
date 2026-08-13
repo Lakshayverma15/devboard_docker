@@ -1,5 +1,3 @@
-# Goal - I have to ensure the packages & dependencies have been audited for Security
-
 name: Dependecy scan
 
 on:
@@ -36,7 +34,7 @@ jobs:
 
             - name: Install Node Dependencies
               run: npm ci
-              working-directory: frontend   
+              working-directory: frontend
 
             - name: Run Dependency Scan for Node
               continue-on-error: true
@@ -44,7 +42,7 @@ jobs:
               working-directory: frontend
 
             - name: Upload Report to Artifacts
-              if: always() # Ensures report uploads even if tests fail
+              if: always()
               uses: actions/upload-artifact@v4
               with:
                 name: dependency-scan-report
