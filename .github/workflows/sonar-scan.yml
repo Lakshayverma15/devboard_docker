@@ -26,6 +26,7 @@ jobs:
             -Dsonar.projectName=devboard
             -Dsonar.sources=backend,frontend
             -Dsonar.projectBaseDir=.
+            -X
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           # FIX: This tries your secret first, checks your variables second, 
