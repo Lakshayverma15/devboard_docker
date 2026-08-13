@@ -33,7 +33,7 @@ jobs:
               with:
                 context: ./${{ matrix.folders }}
                 file: ./${{ matrix.folders }}/Dockerfile
-                # Hardcoded username target to completely eliminate variable context slashes
+                # Built as a singular clean string path string to fix your reference error
                 tags: lakshayverma1515/devboard-${{ matrix.folders }}:latest
                 push: false
                 load: true
