@@ -9,15 +9,15 @@ jobs:
         strategy:
             fail-fast: false
             matrix: 
-                folders: ['backend','frontend']
+                folders: ['backend', 'frontend']
         steps:
             - name: Code Checkout
-              uses: actions/checkout@v7
+              uses: actions/checkout@v4
 
-            - name: ${{ matrix.folders}} Dockerfile Lint
+            - name: ${{ matrix.folders }} Dockerfile Lint
               uses: hadolint/hadolint-action@v3.1.0
               with:
-                dockerfile: ${{ matrix.folders}}/Dockerfile
+                dockerfile: ${{ matrix.folders }}/Dockerfile
               
             - name: Docker Setup [Login]
               uses: docker/login-action@v4
@@ -25,7 +25,10 @@ jobs:
                 username: ${{ vars.DOCKERHUB_USERNAME }}
                 password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-            - name: Docker Build ${{ matrix.folders}}
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+
+            - name: Docker Build ${{ matrix.folders }}
               uses: docker/build-push-action@v6
               with:
                 context: ./${{ matrix.folders }}
@@ -35,14 +38,14 @@ jobs:
                 load: true
 
             - name: Run Trivy vulnerability scanner
-              uses: aquasecurity/trivy-action@v0.36.0
+              uses: aquasecurity/trivy-action@v0.29.0
               continue-on-error: true
               with:
                 image-ref: ${{ vars.DOCKERHUB_USERNAME }}/devboard-${{ matrix.folders }}:latest
                 format: 'table'
                 exit-code: '1'
                 ignore-unfixed: true
-                vuln-type: 'os,library'
+                scanners: 'vuln'
                 severity: 'CRITICAL'
 
             - name: Create Reports Directory
@@ -51,14 +54,14 @@ jobs:
 
             - name: Run Trivy vulnerability scanner (Report output)
               if: always()
-              uses: aquasecurity/trivy-action@v0.36.0
+              uses: aquasecurity/trivy-action@v0.29.0
               continue-on-error: true
               with:
                 image-ref: ${{ vars.DOCKERHUB_USERNAME }}/devboard-${{ matrix.folders }}:latest
                 format: 'sarif'
                 output: 'reports/trivy-${{ matrix.folders }}-report.sarif'
                 ignore-unfixed: true
-                vuln-type: 'os,library'
+                scanners: 'vuln'
                 severity: 'CRITICAL'
 
             - name: Upload Report to Artifacts
@@ -66,5 +69,5 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                 name: docker-scan-report-${{ matrix.folders }}
-                path: reports/
+                path: reports/trivy-${{ matrix.folders }}-report.sarif
                 retention-days: 5
