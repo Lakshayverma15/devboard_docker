@@ -33,15 +33,16 @@ jobs:
               with:
                 context: ./${{ matrix.folders }}
                 file: ./${{ matrix.folders }}/Dockerfile
-                tags: ${{ vars.DOCKERHUB_USERNAME }}/devboard-${{ matrix.folders }}:latest
+                # FIXED: Removed the invalid syntax to ensure a clean tag format
+                tags: lakshayverma1515/devboard-${{ matrix.folders }}:latest
                 push: false
-                load: true # Safely loads image into local runner memory for Trivy
+                load: true
 
             - name: Run Trivy vulnerability scanner
               uses: aquasecurity/trivy-action@v0.35.0
               continue-on-error: true
               with:
-                image-ref: ${{ vars.DOCKERHUB_USERNAME }}/devboard-${{ matrix.folders }}:latest
+                image-ref: lakshayverma1515/devboard-${{ matrix.folders }}:latest
                 format: 'table'
                 exit-code: '1'
                 ignore-unfixed: true
