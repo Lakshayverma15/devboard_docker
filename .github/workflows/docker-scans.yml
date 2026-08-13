@@ -26,8 +26,13 @@ jobs:
                 password: ${{ secrets.DOCKERHUB_TOKEN }}
 
             - name: Docker Build ${{ matrix.folders}}
-              run: docker build -t ${{ vars.DOCKERHUB_USERNAME }}/devboard-${{ matrix.folders }}:latest .
-              working-directory: ${{ matrix.folders}}
+              uses: docker/build-push-action@v6
+              with:
+                context: ./${{ matrix.folders }}
+                file: ./${{ matrix.folders }}/Dockerfile
+                tags: ${{ vars.DOCKERHUB_USERNAME }}/devboard-${{ matrix.folders }}:latest
+                push: false
+                load: true
 
             - name: Run Trivy vulnerability scanner
               uses: aquasecurity/trivy-action@v0.36.0
