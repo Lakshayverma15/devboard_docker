@@ -33,7 +33,6 @@ jobs:
               with:
                 context: ./${{ matrix.folders }}
                 file: ./${{ matrix.folders }}/Dockerfile
-                # Match the exact image naming scheme defined in your docker-compose.yml file
                 tags: trainwithshubham/devboard-${{ matrix.folders }}:latest
                 push: false
                 load: true
