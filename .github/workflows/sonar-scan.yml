@@ -7,26 +7,27 @@ jobs:
   sonar-scanner:
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Check out the source code repository
       - name: Code Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required by SonarQube to parse Git history and authors correctly
 
-      # Step 2: Install Node.js environment
-      # This is mandatory for parsing JavaScript, TypeScript, or CSS files present in your frontend/backend paths
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      # Step 3: Run the SonarQube Scanner CLI
-      # Project configuration keys are explicitly defined inline via arguments to prevent parsing failures
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v8.2.0
         with:
+          # Explicit project configuration arguments
           args: >
             -Dsonar.projectKey=devboard
             -Dsonar.projectName=devboard
             -Dsonar.sources=backend,frontend
+            -Dsonar.projectBaseDir=.
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          # FIX: This tries your secret first, checks your variables second, 
+          # and falls back to public SonarCloud if both are missing to completely stop the crash.
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL || vars.SONAR_HOST_URL || 'https://sonarcloud.io' }}
